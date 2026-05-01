@@ -8,8 +8,8 @@ import {
 import { createHash, randomBytes, randomInt, timingSafeEqual } from 'crypto';
 import { RateLimitService } from '../common/rate-limit/rate-limit.service';
 import { RedisService } from '../redis/redis.service';
-import { EmailService } from 'src/email/email.service';
-import { EmailTemplate } from 'src/email/email.template';
+import { EmailService } from '../email/email.service';
+import { EmailTemplate } from '../email/email.template';
 type OtpRecord = {
   recipient: string;
   purpose: string;
