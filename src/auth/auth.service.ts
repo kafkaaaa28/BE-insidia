@@ -39,21 +39,35 @@ export class AuthService {
   ) {}
 
   async requestOtpLogin(email: string, ipAddress: string) {
-    const user = await this.authRepository.findUserByNormalizedEmail(email);
-    if (user && user.status !== 'ACTIVE') return;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const user =
+      await this.authRepository.findUserByNormalizedEmail(normalizedEmail);
+
+    if (user && user.status === 'BANNED') {
+      return;
+    }
 
     const otp = await this.otpService.sendOtp({
-      recipient: email,
+      recipient: normalizedEmail,
       purpose: 'login',
       ipAddress,
     });
 
-    return {
-      message: 'OTP login sudah dibuat',
+    const response: {
+      token: string;
+      expiresInSeconds: number;
+      devOtp?: string;
+    } = {
       token: otp.token,
       expiresInSeconds: otp.expiresInSeconds,
-      devOtp: otp.devOtp,
     };
+
+    if (process.env.NODE_ENV !== 'production') {
+      response.devOtp = otp.devOtp;
+    }
+    console.log(response);
+    return response;
   }
 
   async verifyOtpLogin(
@@ -76,6 +90,7 @@ export class AuthService {
       if (user) {
         userId = user.id;
         user = await this.ensureActiveUser(user);
+        await this.authRepository.restoreUserByEmail(email);
       } else {
         user = await this.authRepository.createEmailUser(email);
         userId = user.id;

@@ -27,6 +27,7 @@ export class AuthController {
     @Body(new ZodValidationPipe(requestOtpSchema)) dto: RequestOtpDto,
     @Req() request: Request,
   ) {
+    console.log('Request OTP login attempt for email:', dto.email);
     return this.authService.requestOtpLogin(dto.email, getIpAddress(request));
   }
 

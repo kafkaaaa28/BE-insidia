@@ -45,7 +45,6 @@ export class JwtTokenService {
 
   verifyAccessToken(token: string): AccessTokenPayload {
     const payload = this.verify(token);
-
     if (payload.type !== 'access') {
       throw new UnauthorizedException('Tipe token tidak valid');
     }

@@ -52,7 +52,12 @@ export class AuthRepository {
       select: publicUserSelect,
     });
   }
-
+  restoreUserByEmail(normalizedEmail: string) {
+    return this.prisma.user.updateMany({
+      where: { normalizedEmail, deletedAt: { not: null } },
+      data: { status: 'ACTIVE' },
+    });
+  }
   findUserById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
