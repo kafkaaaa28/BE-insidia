@@ -17,11 +17,13 @@ import {
   AdminAccessGuard,
   SuperAdminAccessGuard,
 } from '../../guards/admin-access.guard';
-import type { AuthenticatedRequest } from '../../guards/access-token.guard';
+import {
+  AccessTokenGuard,
+  type AuthenticatedRequest,
+} from '../../guards/access-token.guard';
 import { Query } from '@nestjs/common';
-import { UserFilter } from './user.constants';
-@UseGuards(AdminAccessGuard)
-@UseGuards(SuperAdminAccessGuard)
+
+@UseGuards(AccessTokenGuard, AdminAccessGuard, SuperAdminAccessGuard)
 @Controller('admin/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
