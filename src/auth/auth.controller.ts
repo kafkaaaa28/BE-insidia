@@ -57,7 +57,6 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AccessTokenGuard)
   @Post('refresh')
   refresh(
     @Body(new ZodValidationPipe(refreshTokenSchema)) dto: RefreshTokenDto,
